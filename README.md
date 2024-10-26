@@ -1,4 +1,4 @@
-# Advanced Database Javascript Project
+# Advanced Database Javascript Project with CouchDB
 
 # Getting Started with Create React App
 
