@@ -8,7 +8,7 @@ const DeleteDocument = () => {
 return(
     <div>
         <form onSubmit={handleSubmit}></form>
-            <h3>Please Select a team to delete below!</h3>
+            <h3>Please Select a Player to delete below!</h3>
         <form/>
     </div>
 );

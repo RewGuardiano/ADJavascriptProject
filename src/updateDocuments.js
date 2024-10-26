@@ -20,7 +20,7 @@ const UpdateDocument = async () => {
 return(
     <div>
         <form>
-            <h3>Please Select a team to Update below!</h3>
+            <h3>Please Select a Player to Update below!</h3>
             <input></input>
             <input></input>
             <input></input>
