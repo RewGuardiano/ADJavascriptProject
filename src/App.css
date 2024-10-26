@@ -86,10 +86,3 @@ label {
   font-weight: bold; 
 }
 
-.nba-logo {
-  position: absolute; /* Position it in a fixed place */
-  top: 20px; /* Distance from the top of the page */
-  left: 20px; /* Distance from the left side */
-  width: 64px; /* Fixed width */
-  height: auto; /* Maintain aspect ratio */
-}
