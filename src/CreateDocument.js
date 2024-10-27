@@ -18,14 +18,14 @@ const CreateDocument = () => {
     const [hallOfFame, setHallOfFame] = useState('');
     const [country, setCountry] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleEnter = (event) => {
         event.preventDefault();
 
-        localDB.post({
+            localDB.post({
             rank: parseInt(rank),
             player: playerName,
             position: position,
-            teams: teams.split('\n').map(team => team.trim()),  // Split by newline
+            teams: teams.split('\n').map(team => team.trim()),
             total_points: parseInt(totalPoints),
             total_games: parseInt(totalGames),
             points_per_game: parseFloat(pointsPerGame),
@@ -34,14 +34,13 @@ const CreateDocument = () => {
             free_shots: parseInt(freeShots),
             born: parseInt(born),
             active_player: activePlayer ? 1 : 0,
-            hall_of_fame: hallOfFame ? parseInt(hallOfFame) : null,
-            country: country
+            hall_of_fame: hallOfFame ? parseInt(hallOfFame) : "",
+            country: country,
         }).then(function (response) {
             alert('Document Added successfully');
         }).catch(function (err) {
             console.error(err);
         });
-
         // Resetting form fields
         setRank('');
         setPlayerName('');
@@ -62,7 +61,7 @@ const CreateDocument = () => {
     return (
         <div className="form-container">
             <h3>Please enter the details of a basketball player below!</h3>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleEnter}>
                 <div>
                     <label htmlFor="rank">Rank:</label>
                     <input type="number" id="rank" value={rank} onChange={(e) => setRank(e.target.value)} required />
@@ -129,7 +128,7 @@ const CreateDocument = () => {
                     <label htmlFor="country">Country:</label>
                     <input type="text" id="country" value={country} onChange={(e) => setCountry(e.target.value)} required />
                 </div>
-                <button type="submit">Submit</button>
+                <button type="enter">Enter</button>
             </form>
         </div>
     );
