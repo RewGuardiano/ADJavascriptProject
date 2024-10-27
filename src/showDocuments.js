@@ -2,27 +2,53 @@ import React, { useState, useEffect } from 'react';
 import localDB from './db'; // Import your localDB setup correctly
 
 const ShowDocuments = () => {
-    const [docs, setDocs] = useState([]);
-    const [selectedDocId, setSelectedDocId] = useState(null);
+  const [docs, setDocs] = useState([]);
+  const [selectedDocId, setSelectedDocId] = useState(null);
 
-    useEffect(() => {
-        const fetchDocs = async () => {
-            try {
-                const allDocs = await localDB.allDocs({ include_docs: true });
-                setDocs(allDocs.rows.map(row => row.doc));
-            } catch (err) {
-                console.error('Error fetching documents:', err);
-            }
-        };
-        fetchDocs();
-    }, []);
+  useEffect(() => {
+      const fetchDocs = async () => {
+          try {
+              const allDocs = await localDB.allDocs({ include_docs: true });
+              // Filter out design documents
+              const filteredDocs = allDocs.rows
+                  .map(row => row.doc)
+                  .filter(doc => !doc._id.startsWith('_design')); // Exclude design documents
+              setDocs(filteredDocs);
+          } catch (err) {
+              console.error('Error fetching documents:', err);
+          }
+      };
+      fetchDocs();
+  }, []);
 
     const handleInputChange = (e, docId, field, isArray = false) => {
         const updatedDocs = docs.map(doc => {
             if (doc._id === docId) {
+                let newValue;
+                switch (field) {
+                    case 'rank':
+                    case 'total_points':
+                    case 'total_games':
+                    case 'points_per_game':
+                    case 'field_goals':
+                    case 'three_points_goals':
+                    case 'free_shots':
+                    case 'born':
+                        newValue = Number(e.target.value); // Convert to Number
+                        break;
+                    case 'active_player':
+                        newValue = e.target.value === 'true' ? 1 : 0; // Convert to 1 or 0
+                        break;
+                    case 'teams':
+                        newValue = e.target.value; // Keep as string for multiple teams
+                        break;
+                    default:
+                        newValue = e.target.value; // Default to string
+                        break;
+                }
                 return {
                     ...doc,
-                    [field]: isArray ? e.target.value.split(',').map(team => team.trim()) : e.target.value,
+                    [field]: isArray ? newValue.split('\n').map(team => team.trim()) : newValue,
                 };
             }
             return doc;
@@ -35,15 +61,34 @@ const ShowDocuments = () => {
             alert('Please select a document to update!');
             return;
         }
-
+    
         const docToUpdate = docs.find(doc => doc._id === selectedDocId);
         if (!docToUpdate) {
             alert('Document could not be found!');
             return;
         }
-
+            // Format the document structure to match the desired output
+        const updatedDoc = {
+            ...docToUpdate,
+            // Ensure the types are correct
+            rank: Number(docToUpdate.rank),
+            player: docToUpdate.player,
+            position: docToUpdate.position,
+            teams: docToUpdate.teams,
+            total_points: Number(docToUpdate.total_points),
+            total_games: Number(docToUpdate.total_games),
+            points_per_game: Number(docToUpdate.points_per_game),
+            field_goals: Number(docToUpdate.field_goals),
+            three_points_goals: Number(docToUpdate.three_points_goals),
+            free_shots: Number(docToUpdate.free_shots),
+            born: Number(docToUpdate.born),
+            active_player: docToUpdate.active_player, // This will be 1 or 0
+            hall_of_fame: docToUpdate.hall_of_fame || "", // Ensure it's a string
+            country: docToUpdate.country,
+        };
+        
         try {
-            await localDB.put(docToUpdate);
+            await localDB.put(updatedDoc);
             alert('Document updated successfully!');
         } catch (err) {
             console.error('Error updating document:', err);
@@ -62,6 +107,7 @@ const ShowDocuments = () => {
             alert('Document could not be found!');
             return;
         }
+        
 
         try {
             await localDB.remove(docToDelete._id, docToDelete._rev);
@@ -72,6 +118,7 @@ const ShowDocuments = () => {
             alert('Failed to delete document');
         }
     };
+
 
     return (
         <div className="table-wrapper">

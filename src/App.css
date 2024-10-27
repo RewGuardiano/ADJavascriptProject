@@ -64,7 +64,7 @@ button {
   padding: 10px 20px; 
   border: none;
   border-radius: 5px;
-  background-color: #0000FF;
+  background-color: #ff0000;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -72,7 +72,7 @@ button {
 }
 
 button:hover {
-  background-color: #0057e7;
+  background-color:  #ccc;
 }
 
 input[type="text"], input[type="number"], select {
@@ -94,6 +94,22 @@ label {
   display: block;
   margin: 10px 0 5px;
   font-weight: bold;
+}
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto; 
+}
+
+.dataTable th, .dataTable td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  word-wrap: break-word; 
+}
+
+.dataTable th {
+  background-color:#0057e7;
 }
 
 /* Responsive design for smaller screens */
